@@ -6,18 +6,17 @@ from . import common
 
 
 class _CNNFunc(common.NFECounter):
-    def __init__(self, hidden_channels, hidden_hidden_channels, num_pieces):
+    def __init__(self, hidden_channels, hidden_hidden_channels, num_pieces, tanh):
         super(_CNNFunc, self).__init__()
 
         self.num_pieces = num_pieces
+        self.tanh = tanh
 
         self.convs = torch.nn.ModuleList()
         for _ in range(num_pieces):
             piece = torch.nn.Sequential(torch.nn.Conv2d(1 + hidden_channels, hidden_hidden_channels, 1),
-                                        torch.nn.BatchNorm2d(hidden_hidden_channels),
                                         torch.nn.Softplus(),
                                         torch.nn.Conv2d(hidden_hidden_channels, hidden_hidden_channels, 3, padding=1),
-                                        torch.nn.BatchNorm2d(hidden_hidden_channels),
                                         torch.nn.Softplus(),
                                         torch.nn.Conv2d(hidden_hidden_channels, hidden_channels, 1))
             self.convs.append(piece)
@@ -32,12 +31,16 @@ class _CNNFunc(common.NFECounter):
 
         t = t.unsqueeze(0).unsqueeze(-1).unsqueeze(-1).repeat(x.size(0), 1, x.size(2), x.size(3))
         x = torch.cat([t, x], dim=1)
-        return conv(x)
+        out = conv(x)
+        if self.tanh:
+            out = out.tanh()
+        return out
 
 
-class NeuralODE_CNN(torch.nn.Module):
-    def __init__(self, img_size, num_classes, hidden_channels, hidden_hidden_channels, num_pieces, norm, rtol, atol):
-        super(NeuralODE_CNN, self).__init__()
+class NeuralODECNN(torch.nn.Module):
+    def __init__(self, img_size, num_classes, hidden_channels, hidden_hidden_channels, num_pieces, norm, rtol, atol,
+                 tanh):
+        super(NeuralODECNN, self).__init__()
 
         input_channels, height, width = img_size
 
@@ -48,7 +51,7 @@ class NeuralODE_CNN(torch.nn.Module):
         self.atol = atol
 
         self.augment = torch.nn.Linear(input_channels, hidden_channels)
-        self.func = _CNNFunc(hidden_channels, hidden_hidden_channels, num_pieces)
+        self.func = _CNNFunc(hidden_channels, hidden_hidden_channels, num_pieces, tanh)
         self.readout = torch.nn.Linear(hidden_channels * height * width, num_classes)
 
     @property
@@ -70,6 +73,7 @@ class NeuralODE_CNN(torch.nn.Module):
         grid_points = torch.linspace(0, self.num_pieces, self.num_pieces + 1, dtype=x.dtype, device=x.device)
         options = dict(grid_points=grid_points, eps=1e-5)
         adjoint_options = options.copy()
+        
         if self.norm:
             adjoint_options['norm'] = common.make_norm(x)
 

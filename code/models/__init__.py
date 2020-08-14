@@ -1,2 +1,2 @@
 from .cde import NeuralCDE
-from .ode import NeuralODE_CNN
+from .ode import NeuralODECNN
