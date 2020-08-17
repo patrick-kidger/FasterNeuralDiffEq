@@ -33,6 +33,10 @@ def _evaluate_metrics(dataloader, model, device):
     backward_nfe = 0
     forward_ts = []
     backward_ts = []
+    fwd_accept_ts = []
+    fwd_reject_ts = []
+    bwd_accept_ts = []
+    bwd_reject_ts = []
 
     start_time = time.time()
     for batch in dataloader:
@@ -40,10 +44,16 @@ def _evaluate_metrics(dataloader, model, device):
         loss, correct = _call_model(model, batch, device)
         forward_nfe += model.nfe
         forward_ts.extend(model.ts)
+        accs, rejs = _count_accept_rejects(model.ts)
+        fwd_accept_ts.extend(accs)
+        fwd_reject_ts.extend(rejs)
         model.reset_nfe_ts()
         loss.backward()
         backward_nfe += model.nfe
         backward_ts.extend(model.ts)
+        accs, rejs = _count_accept_rejects(model.ts, reverse_time=True)
+        bwd_accept_ts.extend(accs)
+        bwd_reject_ts.extend(rejs)
         model.zero_grad()
         model.reset_nfe_ts()
 
@@ -57,8 +67,30 @@ def _evaluate_metrics(dataloader, model, device):
     total_accuracy = total_correct / total_dataset_size
     metrics = common.AttrDict(accuracy=total_accuracy, dataset_size=total_dataset_size,
                               loss=total_loss, timestamp=start_time, timespan=timespan, forward_nfe=forward_nfe,
-                              backward_nfe=backward_nfe, forward_ts=forward_ts, backward_ts=backward_ts)
+                              backward_nfe=backward_nfe, forward_ts=forward_ts, backward_ts=backward_ts,
+                              fwd_accept_ts=fwd_accept_ts, fwd_reject_ts=fwd_reject_ts, bwd_accept_ts=bwd_accept_ts, bwd_reject_ts=bwd_reject_ts)
     return metrics
+
+
+def _count_accept_rejects(ts, first_step_given=False, evals_per_step=6, reverse_time=False):
+    if first_step_given:
+        offset = evals_per_step - 1
+    else:
+        offset = evals_per_step + 1
+
+    ineq = lambda t0, t1: t0 < t1 if reverse_time else t1 < t0
+
+    step_times = ts[offset::evals_per_step]
+    accepts = []
+    rejects = []
+    for t, next_t in zip(step_times[:-1], step_times[1:]):
+        if ineq(t, next_t):
+            rejects.append(t)
+        else:
+            accepts.append(t)
+    accepts.append(step_times[-1])
+
+    return accepts, rejects
 
 
 def _train_loop(train_dataloader, val_dataloader, model, optimizer, max_epochs, device):
