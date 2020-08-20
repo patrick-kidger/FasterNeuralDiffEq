@@ -5,8 +5,8 @@ import train
 
 def main(device, norm, tanh, rtol=1e-3, atol=1e-3, hidden_channels=32, hidden_hidden_channels=128, num_pieces=1):
     batch_size = 128
-    name = 'speech_commands/' + '-'.join(map(str, [norm, rtol, atol, hidden_channels, hidden_hidden_channels,
-                                                   num_pieces])).replace('.', '-')
+    name = 'cifar10/' + '-'.join(map(str, [norm, rtol, atol, hidden_channels, hidden_hidden_channels,
+                                           num_pieces])).replace('.', '-')
     save = True
     max_epochs = 100
     lr = 1e-3

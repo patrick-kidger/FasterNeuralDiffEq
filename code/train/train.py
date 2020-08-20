@@ -63,7 +63,7 @@ def _evaluate_metrics(dataloader, model, device):
 
 def _train_loop(train_dataloader, val_dataloader, model, optimizer, max_epochs, device):
     model.train()
-    best_model = model
+    best_model = model.state_dict()
     best_train_loss = math.inf
     best_train_loss_epoch = 0
     history = []
