@@ -33,10 +33,10 @@ def _evaluate_metrics(dataloader, model, device):
     backward_nfe = 0
     forward_ts = []
     backward_ts = []
-    fwd_accept_ts = []
-    fwd_reject_ts = []
-    bwd_accept_ts = []
-    bwd_reject_ts = []
+    forward_accept_ts = []
+    forward_reject_ts = []
+    backward_accept_ts = []
+    backward_reject_ts = []
 
     start_time = time.time()
     for batch in dataloader:
@@ -45,15 +45,15 @@ def _evaluate_metrics(dataloader, model, device):
         forward_nfe += model.nfe
         forward_ts.extend(model.ts)
         accs, rejs = _count_accept_rejects(model.ts)
-        fwd_accept_ts.extend(accs)
-        fwd_reject_ts.extend(rejs)
+        forward_accept_ts.extend(accs)
+        forward_reject_ts.extend(rejs)
         model.reset_nfe_ts()
         loss.backward()
         backward_nfe += model.nfe
         backward_ts.extend(model.ts)
         accs, rejs = _count_accept_rejects(model.ts, reverse_time=True)
-        bwd_accept_ts.extend(accs)
-        bwd_reject_ts.extend(rejs)
+        backward_accept_ts.extend(accs)
+        backward_reject_ts.extend(rejs)
         model.zero_grad()
         model.reset_nfe_ts()
 
@@ -68,7 +68,8 @@ def _evaluate_metrics(dataloader, model, device):
     metrics = common.AttrDict(accuracy=total_accuracy, dataset_size=total_dataset_size,
                               loss=total_loss, timestamp=start_time, timespan=timespan, forward_nfe=forward_nfe,
                               backward_nfe=backward_nfe, forward_ts=forward_ts, backward_ts=backward_ts,
-                              fwd_accept_ts=fwd_accept_ts, fwd_reject_ts=fwd_reject_ts, bwd_accept_ts=bwd_accept_ts, bwd_reject_ts=bwd_reject_ts)
+                              forward_accept_ts=forward_accept_ts, forward_reject_ts=forward_reject_ts,
+                              backward_accept_ts=backward_accept_ts, backward_reject_ts=backward_reject_ts)
     return metrics
 
 
