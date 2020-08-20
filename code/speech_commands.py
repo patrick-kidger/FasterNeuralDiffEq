@@ -7,8 +7,8 @@ def main(device, norm, rtol, atol, hidden_channels=90, hidden_hidden_channels=40
     batch_size = 1024
     name = 'speech_commands/' + '-'.join(map(str, [norm, rtol, atol, hidden_channels, hidden_hidden_channels,
                                                    num_hidden_layers])).replace('.', '-')
-    save = True
-    max_epochs = 200
+    save = False
+    max_epochs = 0
     lr = 1.6e-3
     weight_decay = 0.01
 
