@@ -1,3 +1,4 @@
+import contextlib
 import copy
 import json
 import math
@@ -187,7 +188,9 @@ def _save_results(name, result):
 
 
 def main(name, train_dataloader, val_dataloader, test_dataloader, device, model, save, max_epochs, lr, weight_decay):
-    with torch.cuda.device(device):  # makes pin_memory work and reset_peak_memory_stats not segfault
+    # makes pin_memory work and reset_peak_memory_stats not segfault
+    with torch.cuda.device(device) if device != 'cpu' else contextlib.nullcontext():
+        
         if device != 'cpu':
             torch.cuda.reset_peak_memory_stats(device)
             baseline_memory = torch.cuda.memory_allocated(device)
