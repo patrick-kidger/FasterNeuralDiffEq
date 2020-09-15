@@ -103,9 +103,9 @@ def _preprocess_data(times, X, y, final_index, static, output_channels, append_i
     val_X = _append_extra(val_X, times, append_intensity)
     train_X = _append_extra(train_X, times, append_intensity)
 
-    train_coeffs = torchcde.linear_interpolation_coeffs(times, train_X)
-    val_coeffs = torchcde.linear_interpolation_coeffs(times, val_X)
-    test_coeffs = torchcde.linear_interpolation_coeffs(times, test_X)
+    train_coeffs = torchcde.linear_interpolation_coeffs(train_X, times)
+    val_coeffs = torchcde.linear_interpolation_coeffs(val_X, times)
+    test_coeffs = torchcde.linear_interpolation_coeffs(test_X, times)
 
     if static is not None:
         test_static = _normalise_data(test_static, train_static)

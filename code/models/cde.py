@@ -64,7 +64,7 @@ class NeuralCDE(torch.nn.Module):
         # coeffs is of shape (batch, length, input_channels) if using any linear interpolation
         # y is of shape (batch,)
 
-        X = torchcde.LinearInterpolation(self.times, coeffs)
+        X = torchcde.LinearInterpolation(coeffs, self.times)
         z0 = self.initial(X.evaluate(self.times[0]))
         options = dict(grid_points=X.grid_points, eps=1e-5)
         adjoint_options = options.copy()
