@@ -1,4 +1,4 @@
-<h1 align='center'> "Hey, that's not an ODE"<BR>Faster ODE Adjoints with 12 Lines of Code</h1>
+<h1 align='center'> "Hey, that's not an ODE":<BR>Faster ODE Adjoints with 12 Lines of Code</h1>
 
 <p align="center">
 <img align="middle" src="./imgs/nfe.png" width="666" />
@@ -75,7 +75,6 @@ python
 >>> norm = True   # use our trick
 >>> rtol = 1e-3
 >>> atol = 1e-5
->>> # Performs training
 >>> results = speech_commands.main(device, norm, rtol, atol)
 >>> print(results.keys())  # inspect results object
 >>> print(results.test_metrics.accuracy)  # query results object
@@ -88,7 +87,6 @@ python
 >>> device = 'cuda'
 >>> norm = False  # don't use our trick
 >>> norm = True   # use our trick
->>> # Performs training
 >>> results = acrobot.main(device, norm)
 >>> print(results.keys())  # inspect results object
 >>> print(results.test_metrics.loss)  # query results object
