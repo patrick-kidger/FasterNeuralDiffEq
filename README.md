@@ -48,7 +48,7 @@ torchdiffeq.odeint_adjoint(func=func, y0=y0, t=t,
 That's literally it.
 
 ## Reproducing experiments
-The code for the Neural CDE and Symplectic ODE-Net experiments is available.
+The code for the Neural CDE and Symplectic ODE-Net experiments is available. (The CNF experiments were performed separately, just by adding the "12 lines of code" to the [FFJORD](https://github.com/rtqichen/ffjord) codebase.)
 
 ### Requirements
 PyTorch >= 1.6    
