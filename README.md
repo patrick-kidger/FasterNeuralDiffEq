@@ -1,4 +1,4 @@
-<h1 align='center'> "Hey, that's not an ODE":<BR>Faster ODE Adjoints with 12 Lines of Code</h1>
+<h1 align='center'> "Hey, that's not an ODE":<BR>Faster ODE Adjoints with 12 Lines of Code<br>[<a href="https://arxiv.org/abs/2009.09457">arXiv</a>]</h1>
 
 <p align="center">
 <img align="middle" src="./imgs/nfe.png" width="666" />
