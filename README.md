@@ -91,3 +91,14 @@ python
 >>> print(results.keys())  # inspect results object
 >>> print(results.test_metrics.loss)  # query results object
 ```
+---
+
+## Citation
+```bibtex
+@article{kidger2020hey,
+    author={Kidger, Patrick and Chen, Ricky T. Q. and Lyons, Terry},
+    title={{``Hey, that's not an ODE'': Faster ODE Adjoints with 12 Lines of Code}},
+    year={2020},
+    journal={arXiv:2009.09457}
+}
+```
