@@ -1,16 +1,16 @@
-<h1 align='center'> "Hey, that's not an ODE":<BR>Faster ODE Adjoints with 12 Lines of Code<br>[<a href="https://arxiv.org/abs/2009.09457">arXiv</a>]</h1>
+<h1 align='center'> "Hey, that's not an ODE": Faster ODE Adjoints via Seminorms<br>(ICML 2021)<br>[<a href="https://arxiv.org/abs/2009.09457">arXiv</a>]</h1>
 
 <p align="center">
 <img align="middle" src="./imgs/nfe.png" width="666" />
 </p>
 
-One simple-to-implement trick dramatically improves the speed at which [Neural ODEs](https://arxiv.org/abs/1806.07366) and [Neural CDEs](https://arxiv.org/abs/2005.08926) can be trained.
+One simple-to-implement trick dramatically improves the speed at which [Neural ODEs](https://arxiv.org/abs/1806.07366) and [Neural CDEs](https://arxiv.org/abs/2005.08926) can be trained. (As much as doubling the speed.)
 
-Backpropagation through a Neural ODE/CDE can be performed via the "adjoint method", which involves solving another differential equation backwards in time.
+Backpropagation through a Neural ODE/CDE can be performed via the "adjoint method", which involves solving another differential equation backwards in time. However it turns out that default numerical solvers are unnecessarily stringent when solving the adjoint equation, and take too many steps, that are too small.
 
-However it turns out that default numerical solvers are unnecessarily stringent when solving the adjoint equation, and take too many steps, that are too small.
+Tweaking things slightly reduces the number of function evaluations on the backward pass **by as much as 62%**. (Exact number will be problem-dependent, of course.)
 
-Tweaking things slightly reduces the number of function evaluations on the backward pass by as much as 62%. (Exact number will be problem-dependent, of course.)
+_[torchdiffeq](https://github.com/rtqichen/torchdiffeq) now supports this feature natively!_
 
 ---
 
@@ -48,7 +48,7 @@ torchdiffeq.odeint_adjoint(func=func, y0=y0, t=t,
 That's it.
 
 ## Reproducing experiments
-The code for the Neural CDE and Symplectic ODE-Net experiments is available. (The CNF experiments were performed separately, just by adding the "12 lines of code" to the [FFJORD](https://github.com/rtqichen/ffjord) codebase.)
+The code for the Neural CDE and Symplectic ODE-Net experiments is available.
 
 ### Requirements
 PyTorch >= 1.6    
@@ -97,8 +97,8 @@ python
 ```bibtex
 @article{kidger2020hey,
     author={Kidger, Patrick and Chen, Ricky T. Q. and Lyons, Terry},
-    title={{``Hey, that's not an ODE'': Faster ODE Adjoints with 12 Lines of Code}},
-    year={2020},
-    journal={arXiv:2009.09457}
+    title={{``Hey, that's not an ODE'': Faster ODE Adjoints via Seminorms}},
+    year={2021},
+    journal={International Conference on Machine Learning}
 }
 ```
