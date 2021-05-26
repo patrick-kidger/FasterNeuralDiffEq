@@ -95,7 +95,7 @@ python
 
 ## Citation
 ```bibtex
-@article{kidger2020hey,
+@article{kidger2021hey,
     author={Kidger, Patrick and Chen, Ricky T. Q. and Lyons, Terry},
     title={{``Hey, that's not an ODE'': Faster ODE Adjoints via Seminorms}},
     year={2021},
